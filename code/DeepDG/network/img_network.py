@@ -27,11 +27,14 @@ class VGGBase(nn.Module):
 res_dict = {"resnet18": models.resnet18, "resnet34": models.resnet34, "resnet50": models.resnet50,
             "resnet101": models.resnet101, "resnet152": models.resnet152, "resnext50": models.resnext50_32x4d, "resnext101": models.resnext101_32x8d}
 
+weights_dict = {"resnet18": models.ResNet18_Weights.DEFAULT, "resnet34": models.ResNet34_Weights.DEFAULT,
+                "resnet50": models.ResNet50_Weights.DEFAULT, "resnet101": models.ResNet101_Weights.DEFAULT, "resnet152": models.ResNet152_Weights.DEFAULT,
+                "resnext50": models.ResNeXt50_32x4d_Weights.DEFAULT, "resnext101": models.ResNeXt101_32x8d_Weights.DEFAULT}
 
 class ResBase(nn.Module):
     def __init__(self, res_name):
         super(ResBase, self).__init__()
-        model_resnet = res_dict[res_name](pretrained=True)
+        model_resnet = res_dict[res_name](weights=weights_dict[res_name])
         self.conv1 = model_resnet.conv1
         self.bn1 = model_resnet.bn1
         self.relu = model_resnet.relu
