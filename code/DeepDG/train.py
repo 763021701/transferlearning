@@ -64,6 +64,8 @@ def get_args():
                         default=1, help="mldg hyper-param")
     parser.add_argument('--mmd_gamma', type=float,
                         default=1, help='MMD, CORAL hyper-param')
+    parser.add_argument('--cfd_gamma', type=float,
+                        default=1, help='CFD hyper-param')
     parser.add_argument('--momentum', type=float,
                         default=0.9, help='for optimizer')
     parser.add_argument('--net', type=str, default='resnet50',
