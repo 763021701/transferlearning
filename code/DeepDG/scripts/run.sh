@@ -1,18 +1,19 @@
 dataset='PACS'
-algorithm=('MLDG' 'ERM' 'DANN' 'RSC' 'Mixup' 'MMD' 'CORAL' 'VREx') 
+algorithm=('MLDG' 'ERM' 'DANN' 'RSC' 'Mixup' 'MMD' 'CORAL' 'VREx')
 test_envs=2
 gpu_ids=0
-data_dir='/home/lw/lw/data/PACS/'
+data_dir='~/workspace/datasets/Homework3-PACS/PACS/'
 max_epoch=2
 net='resnet18'
 task='img_dg'
-output='/home/lw/lw/data/train_output/test'
+output='/home/ubuntu/workspace/project/transferlearning/code/DeepDG/'
 
 i=0
 
 # MLDG 
 python train.py --data_dir $data_dir --max_epoch $max_epoch --net $net --task $task --output $output \
 --test_envs $test_envs --dataset $dataset --algorithm ${algorithm[i]} --mldg_beta 10
+
 
 # Group_DRO
 python train.py --data_dir ~/myexp30609/data/PACS/ --max_epoch 3 --net resnet18 --task img_dg --output ~/tmp/test00 \
@@ -43,3 +44,4 @@ python train.py --data_dir /home/lw/lw/data/PACS/ --max_epoch 120 --net resnet18
 --test_envs 2 --dataset PACS --algorithm DIFEX --alpha 0.001 --beta 0.5 --lam 0.1 --disttype norm-1-norm
 python train.py --data_dir /home/lw/lw/data/PACS/ --max_epoch 120 --net resnet18 --checkpoint_freq 1 --task img_dg --output /home/lw/lw/data/train_output/difexpacs/n1n-3 \
 --test_envs 3 --dataset PACS --algorithm DIFEX --alpha 0.01 --beta 10 --lam 1 --disttype norm-1-norm
+
