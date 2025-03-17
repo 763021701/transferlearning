@@ -29,7 +29,7 @@ res_dict = {"resnet18": models.resnet18, "resnet34": models.resnet34, "resnet50"
 
 weights_dict = {"resnet18": models.ResNet18_Weights.DEFAULT, "resnet34": models.ResNet34_Weights.DEFAULT,
                 "resnet50": models.ResNet50_Weights.DEFAULT, "resnet101": models.ResNet101_Weights.DEFAULT, "resnet152": models.ResNet152_Weights.DEFAULT,
-                "resnext50": models.ResNeXt50_32x4d_Weights.DEFAULT, "resnext101": models.ResNeXt101_32x8d_Weights.DEFAULT}
+                "resnext50": models.ResNeXt50_32X4D_Weights.DEFAULT, "resnext101": models.ResNeXt101_32X8D_Weights.DEFAULT}
 
 class ResBase(nn.Module):
     def __init__(self, res_name):

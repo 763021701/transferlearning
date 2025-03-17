@@ -53,7 +53,8 @@ def alg_loss_dict(args):
                  'GroupDRO': ['group'],
                  'RSC': ['class'],
                  'VREx': ['loss', 'nll', 'penalty'],
-                 'DIFEX': ['class', 'dist', 'exp', 'align', 'total']
+                 'DIFEX': ['class', 'dist', 'exp', 'align', 'total'],
+                 'CFD': ['class', 'cfd', 'total'],
                  }
     return loss_dict[args.algorithm]
 

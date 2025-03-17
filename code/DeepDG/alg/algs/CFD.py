@@ -49,7 +49,6 @@ class CFLossFunc(nn.Module):
 
         loss_pha = loss_pha.clamp(min=1e-12)  # keep numerical stability
 
-
         loss = torch.sqrt(torch.mean(self.alpha * loss_amp + self.beta * loss_pha))
         return loss
 
@@ -59,9 +58,9 @@ class CFD(ERM):
         super(CFD, self).__init__(args)
         self.args = args
         self.cf_loss = CFLossFunc(alpha=1, beta=1)
-    
+
     def cfd(self, x, y):
-        self.cf_loss(x, y)
+        return self.cf_loss(x, y)
 
     def update(self, minibatches, opt, sch):
         objective = 0
