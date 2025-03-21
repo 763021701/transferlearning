@@ -71,7 +71,7 @@ class CFD(ERM):
     def __init__(self, args):
         super(CFD, self).__init__(args)
         self.args = args
-        self.cf_loss = CFLossFunc(alpha_for_loss=0.5, beta_for_loss=0.5)
+        self.cf_loss = CFLossFunc(self.args.cfd_alpha, self.args.cfd_beta)
 
     def cfd(self, x, y):
         return self.cf_loss(x, y)
