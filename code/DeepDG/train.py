@@ -23,9 +23,9 @@ def get_args():
                         default=32, help='batch_size')
     parser.add_argument('--beta', type=float,
                         default=1, help='DIFEX beta')
-    parser.add_argument('--cfd_alpha', type=int, default=0.5,
+    parser.add_argument('--cfd_alpha', type=float, default=0.5,
                         help='CFD alpha')
-    parser.add_argument('--cfd_beta', type=int, default=0.5,
+    parser.add_argument('--cfd_beta', type=float, default=0.5,
                         help='CFD beta')
     parser.add_argument('--beta1', type=float, default=0.5,
                         help='Adam hyper-param')
