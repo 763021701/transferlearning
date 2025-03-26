@@ -127,12 +127,14 @@ class CFLossFunc(nn.Module):
         return loss
 
 
+net_dim_dict = {"resnet18": 512, "resnet50": 2048}
+
 class CFD(ERM):
     def __init__(self, args):
         super(CFD, self).__init__(args)
         self.args = args
         self.cf_loss = CFLossFunc(self.args.cfd_alpha, self.args.cfd_beta)
-        self.sample_net = SampleNet(512, self.args.cfd_t_batchsize, 1)
+        self.sample_net = SampleNet(net_dim_dict[args.net], self.args.cfd_t_batchsize, 1)
         self.sample_net_opt = torch.optim.AdamW(
             self.sample_net.parameters(), lr=self.args.lr, weight_decay=self.args.weight_decay
         )

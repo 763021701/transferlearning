@@ -27,7 +27,7 @@ def get_args():
                         help='CFD alpha')
     parser.add_argument('--cfd_beta', type=float, default=0.5,
                         help='CFD beta')
-    parser.add_argument('--cfd_t_batchsize', type=int, default=2048,
+    parser.add_argument('--cfd_t_batchsize', type=int, default=4096,
                         help='CFD t batchsize')
     parser.add_argument('--beta1', type=float, default=0.5,
                         help='Adam hyper-param')
