@@ -36,7 +36,8 @@ class SampleNet(nn.Module):
                 self.activation_1 if i < (num_layer - 1) else self.activation_2
             )
 
-    def forward(self, device):
+    def forward(self):
+        device = next(self.t_layers_list.parameters()).device
         # Generate white noise
         if self.t_sigma_num > 0:
             # Initialize the white noise input
@@ -143,7 +144,8 @@ class CFD(ERM):
         nmb = len(minibatches)
 
         # train sample net
-        t = self.sample_net(minibatches[0][0].device)
+        self.sample_net.train()
+        t = self.sample_net()
 
         features = [self.featurizer(
             data[0].cuda().float()) for data in minibatches]
@@ -154,7 +156,7 @@ class CFD(ERM):
             for j in range(i + 1, nmb):
                 feat = F.normalize(features[i].detach(), dim=1)
                 feat_tg = F.normalize(features[j].detach(), dim=1)
-                penalty_t += self.cfd(feat_tg, feat, t)
+                penalty_t -= self.cfd(feat_tg, feat, t)
 
         if nmb > 1:
             penalty_t /= (nmb * (nmb - 1) / 2)
@@ -175,7 +177,7 @@ class CFD(ERM):
             for j in range(i + 1, nmb):
                 feat = F.normalize(features[i], dim=1)
                 feat_tg = F.normalize(features[j], dim=1)
-                penalty += self.cfd(feat_tg, feat, t)
+                penalty += self.cfd(feat_tg, feat, t.detach())
 
         objective /= nmb
         if nmb > 1:
