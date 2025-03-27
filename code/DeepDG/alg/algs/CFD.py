@@ -192,7 +192,7 @@ class CFD(ERM):
             for j in range(i + 1, nmb):
                 feat = F.normalize(features[i], dim=1)
                 feat_tg = F.normalize(features[j], dim=1)
-                penalty += self.cfd(feat_tg, feat, t.detach())
+                penalty += self.cfd(feat_tg, feat, t.detach(), epoch)
 
         objective /= nmb
         if nmb > 1:
