@@ -86,12 +86,23 @@ class CFLossFunc(nn.Module):
         beta_for_loss: the weight for phase in CF loss, from 0-1
     """
 
-    def __init__(self, alpha_for_loss=0.5, beta_for_loss=0.5):
+    def __init__(self, alpha_for_loss=0.5, beta_for_loss=0.5, args=None):
         super(CFLossFunc, self).__init__()
+        self.initial_alpha = alpha_for_loss
         self.alpha = alpha_for_loss
         self.beta = beta_for_loss
+        if args is not None:
+            self.max_epoch = args.max_epoch
 
-    def forward(self, feat_tg, feat, t=None, args=None):
+    def update_alpha_beta(self, epoch):
+        if epoch < self.max_epoch:
+            self.alpha = self.initial_alpha * (1 - epoch / self.max_epoch)
+        else:
+            self.alpha = 0
+
+        self.beta = 1 - self.alpha
+
+    def forward(self, feat_tg, feat, t=None, args=None, epoch=0):
         """
         Calculate CF loss between target and synthetic features.
         Args:
@@ -122,6 +133,8 @@ class CFLossFunc(nn.Module):
 
         loss_pha = loss_pha.clamp(min=1e-12)  # Ensure numerical stability
 
+        self.update_alpha_beta(epoch)
+
         # Combine losses
         loss = torch.mean(torch.sqrt(self.alpha * loss_amp + self.beta * loss_pha))
         return loss
@@ -133,16 +146,16 @@ class CFD(ERM):
     def __init__(self, args):
         super(CFD, self).__init__(args)
         self.args = args
-        self.cf_loss = CFLossFunc(self.args.cfd_alpha, self.args.cfd_beta)
+        self.cf_loss = CFLossFunc(self.args.cfd_alpha, self.args.cfd_beta, args)
         self.sample_net = SampleNet(net_dim_dict[args.net], self.args.cfd_t_batchsize, 1)
         self.sample_net_opt = torch.optim.AdamW(
             self.sample_net.parameters(), lr=self.args.lr, weight_decay=self.args.weight_decay
         )
 
-    def cfd(self, x, y, t):
-        return self.cf_loss(x, y, t, self.args)
+    def cfd(self, x, y, t, epoch):
+        return self.cf_loss(x, y, t, self.args, epoch)
 
-    def update(self, minibatches, opt, sch):
+    def update(self, minibatches, opt, sch, epoch):
         nmb = len(minibatches)
 
         # train sample net
@@ -158,7 +171,7 @@ class CFD(ERM):
             for j in range(i + 1, nmb):
                 feat = F.normalize(features[i].detach(), dim=1)
                 feat_tg = F.normalize(features[j].detach(), dim=1)
-                penalty_t -= self.cfd(feat_tg, feat, t)
+                penalty_t -= self.cfd(feat_tg, feat, t, epoch)
 
         if nmb > 1:
             penalty_t /= (nmb * (nmb - 1) / 2)
