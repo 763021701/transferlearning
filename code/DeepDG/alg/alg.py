@@ -15,10 +15,10 @@ from alg.algs.CFD import CFD
 
 ALGORITHMS = [
     'ERM',
-    'ERM2',
     'Mixup',
     'CORAL',
     'MMD',
+    'MMD2',
     'DANN',
     'MLDG',
     'GroupDRO',
