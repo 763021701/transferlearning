@@ -50,6 +50,7 @@ def alg_loss_dict(args):
                  'Mixup': ['class'],
                  'MLDG': ['total'],
                  'MMD': ['class', 'mmd', 'total'],
+                 'MMD2': ['class', 'mmd', 'total'],
                  'GroupDRO': ['group'],
                  'RSC': ['class'],
                  'VREx': ['loss', 'nll', 'penalty'],
