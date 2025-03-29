@@ -1,5 +1,6 @@
 # coding=utf-8
 from alg.algs.ERM import ERM
+from alg.algs.ERM2 import ERM2
 from alg.algs.MMD import MMD
 from alg.algs.CORAL import CORAL
 from alg.algs.DANN import DANN
@@ -14,6 +15,7 @@ from alg.algs.CFD import CFD
 
 ALGORITHMS = [
     'ERM',
+    'ERM2',
     'Mixup',
     'CORAL',
     'MMD',
