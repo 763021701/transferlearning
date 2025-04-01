@@ -76,6 +76,8 @@ def get_args():
                         default=0.9, help='for optimizer')
     parser.add_argument('--net', type=str, default='resnet50',
                         help="featurizer: vgg16, resnet50, resnet101,DTNBase")
+    parser.add_argument('--net_pt_weight', type=str, default='',
+                        help="net pretrained weight: '' for not, 'default'")
     parser.add_argument('--N_WORKERS', type=int, default=4)
     parser.add_argument('--rsc_f_drop_factor', type=float,
                         default=1/3, help='rsc hyper-param')
