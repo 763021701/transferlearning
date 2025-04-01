@@ -3,6 +3,7 @@ from alg.algs.ERM import ERM
 from alg.algs.MMD import MMD
 from alg.algs.MMD2 import MMD2
 from alg.algs.CORAL import CORAL
+from alg.algs.CORAL import CORAL2
 from alg.algs.DANN import DANN
 from alg.algs.RSC import RSC
 from alg.algs.Mixup import Mixup
@@ -17,6 +18,7 @@ ALGORITHMS = [
     'ERM',
     'Mixup',
     'CORAL',
+    'CORAL2',
     'MMD',
     'MMD2',
     'DANN',
