@@ -1,7 +1,7 @@
 dataset='PACS'
 algorithm=('MLDG' 'ERM' 'DANN' 'RSC' 'Mixup' 'MMD' 'CORAL' 'VREx' 'CFD')
 algorithm2=('MLDG2' 'ERM2' 'DANN2' 'RSC2' 'Mixup2' 'MMD2' 'CORAL2' 'VREx2' 'CFD2')
-test_envs=1
+test_envs=3
 gpu_id=3
 n_workers=8
 data_dir='~/workspace/datasets/Homework3-PACS/PACS/'
@@ -23,7 +23,7 @@ task='img_dg'
 
 # CORAL2
 i=6
-mmd_gamma=1
+mmd_gamma=0.01
 lr=0.005
 output="/home/ubuntu/workspace/project/transferlearning/code/DeepDG/output/${algorithm2[$i]}[$net_pt_weight]-$net-$lr-$mmd_gamma-$dataset$test_envs"
 

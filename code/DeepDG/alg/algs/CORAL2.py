@@ -4,9 +4,9 @@ import torch.nn.functional as F
 from alg.algs.ERM import ERM
 
 
-class CORAL(ERM):
+class CORAL2(ERM):
     def __init__(self, args):
-        super(CORAL, self).__init__(args)
+        super(CORAL2, self).__init__(args)
         self.args = args
         self.kernel_type = "mean_cov"
 
