@@ -29,7 +29,7 @@ cfd_gamma=1
 lr=0.005
 cfd_alpha=0.8
 cfd_beta=0.2
-output="/home/ubuntu/workspace/project/transferlearning/code/DeepDG/output/${algorithm[$i]}[$net_pt_weight]-$net-$lr-$cfd_gamma-$cfd_alpha-$cfd_beta-$dataset$test_envs"
+output="/home/ubuntu/workspace/project/transferlearning/code/DeepDG/output/${algorithm[$i]}_$net_pt_weight-$net-$lr-$cfd_gamma-$cfd_alpha-$cfd_beta-$dataset$test_envs"
 
 python train.py --data_dir $data_dir --max_epoch $max_epoch --net $net --task $task --output $output \
                 --test_envs $test_envs --dataset $dataset --algorithm ${algorithm[i]} --lr $lr \
