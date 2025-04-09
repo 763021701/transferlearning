@@ -1,6 +1,6 @@
 # coding=utf-8
 import torch
-
+import torch.nn as nn
 
 def get_params(alg, args, inner=False, alias=True, isteacher=False):
     if args.schuse:
@@ -28,10 +28,19 @@ def get_params(alg, args, inner=False, alias=True, isteacher=False):
              initlr}
         ]
     elif alias:
-        params = [
-            {'params': alg.featurizer.parameters(), 'lr': args.lr_decay1 * initlr},
-            {'params': alg.classifier.parameters(), 'lr': args.lr_decay2 * initlr}
-        ]
+        if args.bn_only:
+            params = []
+            for nm, m in alg.featurizer.named_modules():
+                if isinstance(m, nn.BatchNorm2d):
+                    for np, p in m.named_parameters():
+                        if np in ['weight', 'bias']:  # weight is scale, bias is shift
+                            params.append({'params': p, 'lr': args.lr_decay1 * initlr})
+            params.append({'params': alg.classifier.parameters(), 'lr': args.lr_decay2 * initlr})
+        else:
+            params = [
+                {'params': alg.featurizer.parameters(), 'lr': args.lr_decay1 * initlr},
+                {'params': alg.classifier.parameters(), 'lr': args.lr_decay2 * initlr}
+            ]
     else:
         params = [
             {'params': alg[0].parameters(), 'lr': args.lr_decay1 * initlr},
