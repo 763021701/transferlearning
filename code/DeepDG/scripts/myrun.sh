@@ -1,5 +1,6 @@
 dataset='PACS'
 algorithm=('MLDG' 'ERM' 'DANN' 'RSC' 'Mixup' 'MMD' 'CORAL' 'VREx' 'CFD')
+algorithm2=('MLDG2' 'ERM2' 'DANN2' 'RSC2' 'Mixup2' 'MMD2' 'CORAL2' 'VREx2' 'CFD2')
 test_envs=2
 gpu_id=0
 n_workers=8

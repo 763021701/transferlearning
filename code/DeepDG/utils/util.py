@@ -57,6 +57,7 @@ def alg_loss_dict(args):
                  'VREx': ['loss', 'nll', 'penalty'],
                  'DIFEX': ['class', 'dist', 'exp', 'align', 'total'],
                  'CFD': ['class', 'cfd', 'total'],
+                 'CFD2': ['class', 'cfd', 'total'],
                  }
     return loss_dict[args.algorithm]
 

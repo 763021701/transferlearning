@@ -13,6 +13,7 @@ from alg.algs.ANDMask import ANDMask
 from alg.algs.VREx import VREx
 from alg.algs.DIFEX import DIFEX
 from alg.algs.CFD import CFD
+from alg.algs.CFD2 import CFD2
 
 ALGORITHMS = [
     'ERM',
@@ -28,7 +29,8 @@ ALGORITHMS = [
     'ANDMask',
     'VREx',
     'DIFEX',
-    'CFD'
+    'CFD',
+    'CFD2'
 ]
 
 
