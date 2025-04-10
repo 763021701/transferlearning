@@ -150,7 +150,7 @@ if __name__ == '__main__':
             if args.algorithm == 'VREx' and algorithm.update_count == args.anneal_iters:
                 opt = get_optimizer(algorithm, args)
                 sch = get_scheduler(opt, args)
-            if args.algorithm == 'CFD':
+            if args.algorithm.startswith('CFD'):
                 step_vals = algorithm.update(minibatches_device, opt, sch, epoch)
             else:
                 step_vals = algorithm.update(minibatches_device, opt, sch)

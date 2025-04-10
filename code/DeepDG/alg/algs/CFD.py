@@ -140,7 +140,7 @@ class CFLossFunc(nn.Module):
         return loss
 
 
-net_dim_dict = {"resnet18": 512, "resnet50": 2048}
+net_dim_dict = {"resnet18": 512, "resnet50": 2048, "vgg16": 1000}
 
 class CFD(ERM):
     def __init__(self, args):
