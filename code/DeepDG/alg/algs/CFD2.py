@@ -133,7 +133,7 @@ class CFLossFunc(nn.Module):
 
         loss_pha = loss_pha.clamp(min=1e-12)  # Ensure numerical stability
 
-        self.update_alpha_beta(epoch)
+        #self.update_alpha_beta(epoch)
 
         # Combine losses
         loss = torch.mean(torch.sqrt(self.alpha * loss_amp + self.beta * loss_pha))
@@ -149,7 +149,7 @@ class CFD2(ERM):
         self.cf_loss = CFLossFunc(self.args.cfd_alpha, self.args.cfd_beta, args)
         self.sample_net = SampleNet(net_dim_dict[args.net], self.args.cfd_t_batchsize, 1)
         self.sample_net_opt = torch.optim.AdamW(
-            self.sample_net.parameters(), lr=self.args.lr, weight_decay=self.args.weight_decay
+            self.sample_net.parameters(), lr=0.01, weight_decay=self.args.weight_decay
         )
 
     def cfd(self, x, y, t, epoch):
@@ -181,7 +181,7 @@ class CFD2(ERM):
             penalty_t /= (nmb * (nmb - 1) / 2)
 
         self.sample_net_opt.zero_grad()
-        penalty_t.backward()
+        (300*penalty_t).backward()
         self.sample_net_opt.step()
 
         # train main net
@@ -190,6 +190,10 @@ class CFD2(ERM):
 
         all_pred_y = self.classifier(features)
         objective = F.cross_entropy(all_pred_y, all_y)
+
+        self.sample_net.eval()
+        with torch.no_grad():
+            t = self.sample_net()
 
         for i in range(nmb):
             for j in range(i + 1, nmb):
@@ -208,4 +212,5 @@ class CFD2(ERM):
         if torch.is_tensor(penalty):
             penalty = penalty.item()
 
-        return {'class': objective.item(), 'cfd': penalty, 'total': (objective.item() + (self.args.cfd_gamma*penalty))}
+        return {'class': objective.item(), 'cfd': penalty,
+                'total': (objective.item() + (self.args.cfd_gamma*penalty)), 'cfd_t': penalty_t}
