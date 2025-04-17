@@ -7,7 +7,7 @@ def get_fea(args):
     if args.dataset == 'dg5':
         net = img_network.DTNBase()
     elif args.net.startswith('res'):
-        net = img_network.ResBase(args.net, args.net_pt_weight)
+        net = img_network.ResBase(args.net, args.net_pt_weight, args.freeze_bn)
     else:
         net = img_network.VGGBase(args.net, args.net_pt_weight)
     return net

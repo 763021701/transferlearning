@@ -49,7 +49,7 @@ res_dict = {"resnet18": models.resnet18, "resnet34": models.resnet34, "resnet50"
             "resnet101": models.resnet101, "resnet152": models.resnet152, "resnext50": models.resnext50_32x4d, "resnext101": models.resnext101_32x8d}
 
 class ResBase(nn.Module):
-    def __init__(self, res_name, weights):
+    def __init__(self, res_name, weights, freeze_bn):
         super(ResBase, self).__init__()
         if weights is None or weights == '':
             model_resnet = res_dict[res_name](weights=None)
@@ -65,6 +65,22 @@ class ResBase(nn.Module):
         self.layer4 = model_resnet.layer4
         self.avgpool = model_resnet.avgpool
         self.in_features = model_resnet.fc.in_features
+
+        self.model_resnet = model_resnet
+        self.FREEZE_BN = freeze_bn
+
+    def train(self, mode=True):
+        """
+        Override the default train() to freeze the BN parameters
+        """
+        super().train(mode)
+        if self.FREEZE_BN:
+            self.freeze_bn()
+
+    def freeze_bn(self):
+        for m in self.model_resnet.modules():
+            if isinstance(m, nn.BatchNorm2d):
+                m.eval()
 
     def forward(self, x):
         x = self.conv1(x)
