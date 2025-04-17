@@ -22,7 +22,7 @@ class TransferLoss(nn.Module):
             self.loss_func = CFLoss(**kwargs)
         else:
             print("WARNING: No valid transfer loss function is used.")
-            self.loss_func = lambda x, y: 0 # return 0
+            self.loss_func = lambda x, y: torch.tensor(0) # return 0
     
     def forward(self, source, target, **kwargs):
         return self.loss_func(source, target, **kwargs)

@@ -1,19 +1,17 @@
-# Dataset configuration
 # Network configuration
 backbone: resnet50
-use_bottleneck: true
 
 # Transfer loss configuration
 transfer_loss: cfd
-transfer_loss_weight: 10.0
+transfer_loss_weight: 1.0
 
 # Training configuration
+n_iter_per_epoch: 500
 n_epoch: 20
-batch_size: 32
 
 # Optimizer configuration
-lr: 0.001
-weight_decay: 0.0005
+lr: 3e-3
+weight_decay: 5e-4
 lr_scheduler: True
 lr_gamma: 0.0003
 lr_decay: 0.75

@@ -79,7 +79,7 @@ class CFLoss(nn.Module):
         self.sample_net = SampleNet(feature_dim=feature_dim, t_batchsize=t_batchsize)
         self.sample_optim = torch.optim.AdamW(self.sample_net.parameters(), lr=0.001, weight_decay=5e-4)
         self.cur_iter = 0
-    
+
     def update_alpha_beta(self, epoch):
         if epoch < self.max_iter:
             self.alpha = self.initial_alpha * (1 - epoch / self.max_iter)
@@ -87,18 +87,18 @@ class CFLoss(nn.Module):
             self.alpha = 0
 
         self.beta = 1 - self.alpha
-    
+
     def _compute_loss(self, feat_tg, feat, t=None):
         """
         Calculate CF loss between target and source features.
         """
         if t is None:
             t = self.sample_net()
-            
+
         # Normalize features
         feat = F.normalize(feat, dim=1)
         feat_tg = F.normalize(feat_tg, dim=1)
-        
+
         t_x_real = calculate_real(torch.matmul(t, feat.t()))
         t_x_imag = calculate_imag(torch.matmul(t, feat.t()))
         t_x_norm = calculate_norm(t_x_real, t_x_imag)
@@ -122,15 +122,15 @@ class CFLoss(nn.Module):
         # Combine losses
         loss = torch.mean(torch.sqrt(self.alpha * loss_amp + self.beta * loss_pha))
         return loss
-        
+
     def train_sample_net(self, source, target):
         """Train the sample network with adversarial loss"""
         self.sample_net.train()
         t = self.sample_net()
-        
+
         # We want to maximize the CF loss for better sampling
         loss = -self._compute_loss(target, source, t)
-        
+
         self.sample_optim.zero_grad()
         loss.backward()
         self.sample_optim.step()
@@ -139,7 +139,7 @@ class CFLoss(nn.Module):
         t = self.sample_net()
 
         return t.detach()
-        
+
     def forward(self, source, target, epoch=None):
         """
         Forward pass for computing CFD loss
@@ -150,12 +150,12 @@ class CFLoss(nn.Module):
         """
         if epoch is not None:
             self.update_alpha_beta(epoch)
-            
+
         # Train sample net and get the sampling points
         t = self.train_sample_net(source.detach(), target.detach())
-        
+
         # Compute actual CFD loss
         loss = self._compute_loss(target, source, t)
-        
+
         self.cur_iter += 1
-        return loss 
+        return loss

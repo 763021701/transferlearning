@@ -9,6 +9,15 @@ resnet_dict = {
     "resnet152": models.resnet152,
 }
 
+weights_dict = {
+    "resnet18": models.ResNet18_Weights.DEFAULT,
+    "resnet34": models.ResNet34_Weights.DEFAULT,
+    "resnet50": models.ResNet50_Weights.DEFAULT,
+    "resnet101": models.ResNet101_Weights.DEFAULT,
+    "resnet152": models.ResNet152_Weights.DEFAULT,
+}
+
+
 def get_backbone(name):
     if "resnet" in name.lower():
         return ResNetBackbone(name)
@@ -34,7 +43,7 @@ class DaNNBackbone(nn.Module):
 
     def output_num(self):
         return self._feature_dim
-    
+
 # convnet without the last layer
 class AlexNetBackbone(nn.Module):
     def __init__(self):
@@ -59,7 +68,7 @@ class AlexNetBackbone(nn.Module):
 class ResNetBackbone(nn.Module):
     def __init__(self, network_type):
         super(ResNetBackbone, self).__init__()
-        resnet = resnet_dict[network_type](pretrained=True)
+        resnet = resnet_dict[network_type](weights=weights_dict[network_type])
         self.conv1 = resnet.conv1
         self.bn1 = resnet.bn1
         self.relu = resnet.relu
@@ -71,7 +80,7 @@ class ResNetBackbone(nn.Module):
         self.avgpool = resnet.avgpool
         self._feature_dim = resnet.fc.in_features
         del resnet
-    
+
     def forward(self, x):
         x = self.conv1(x)
         x = self.bn1(x)
@@ -84,6 +93,6 @@ class ResNetBackbone(nn.Module):
         x = self.avgpool(x)
         x = x.view(x.size(0), -1)
         return x
-    
+
     def output_num(self):
         return self._feature_dim
