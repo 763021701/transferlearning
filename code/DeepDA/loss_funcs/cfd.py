@@ -70,7 +70,7 @@ class CFLoss(nn.Module):
     """
     CF loss function in terms of phase and amplitude difference.
     """
-    def __init__(self, alpha=0.5, beta=0.5, t_batchsize=64, feature_dim=512, max_iter=1000):
+    def __init__(self, alpha=0.5, beta=0.5, t_batchsize=64, feature_dim=512, max_iter=1000, **kwargs):
         super(CFLoss, self).__init__()
         self.initial_alpha = alpha
         self.alpha = alpha

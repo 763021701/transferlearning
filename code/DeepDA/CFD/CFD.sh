@@ -2,6 +2,12 @@
 GPU_ID=1
 data_dir=/home/ubuntu/workspace/datasets/OFFICE31
 output_dir=/home/ubuntu/workspace/project/transferlearning/code/DeepDA/output/CFD
+
+if [ ! -d "$output_dir" ]; then
+    echo "Creating output_dir $output_dir"
+    mkdir -p "$output_dir"
+fi
+
 # Office31
 CUDA_VISIBLE_DEVICES=$GPU_ID python main.py --config CFD/CFD.yaml --data_dir $data_dir --src_domain dslr --tgt_domain amazon | tee "$output_dir/CFD_D2A.log"
 CUDA_VISIBLE_DEVICES=$GPU_ID python main.py --config CFD/CFD.yaml --data_dir $data_dir --src_domain dslr --tgt_domain webcam | tee "$output_dir/CFD_D2W.log"
