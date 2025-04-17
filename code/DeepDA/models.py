@@ -5,7 +5,8 @@ import backbones
 
 
 class TransferNet(nn.Module):
-    def __init__(self, num_class, base_net='resnet50', transfer_loss='mmd', use_bottleneck=True, bottleneck_width=256, max_iter=1000, **kwargs):
+    def __init__(self, num_class, base_net='resnet50', transfer_loss='mmd', use_bottleneck=True, bottleneck_width=256, max_iter=1000, 
+                 cfd_alpha=0.5, cfd_beta=0.5, t_batchsize=64, **kwargs):
         super(TransferNet, self).__init__()
         self.num_class = num_class
         self.base_network = backbones.get_backbone(base_net)
@@ -27,6 +28,16 @@ class TransferNet(nn.Module):
             "max_iter": max_iter,
             "num_class": num_class
         }
+        
+        # Add CFD specific parameters if needed
+        if transfer_loss == 'cfd':
+            transfer_loss_args.update({
+                "alpha": cfd_alpha,
+                "beta": cfd_beta,
+                "t_batchsize": t_batchsize,
+                "feature_dim": feature_dim
+            })
+            
         self.adapt_loss = TransferLoss(**transfer_loss_args)
         self.criterion = torch.nn.CrossEntropyLoss()
 
@@ -53,6 +64,9 @@ class TransferNet(nn.Module):
         elif self.transfer_loss == 'bnm':
             tar_clf = self.classifier_layer(target)
             target = nn.Softmax(dim=1)(tar_clf)
+        elif self.transfer_loss == 'cfd':
+            # For CFD loss, we might want to pass the current epoch for dynamic adjustments
+            kwargs['epoch'] = getattr(self, 'current_epoch', 0)
         
         transfer_loss = self.adapt_loss(source, target, **kwargs)
         return clf_loss, transfer_loss
@@ -78,6 +92,10 @@ class TransferNet(nn.Module):
             params.append(
                 {'params': self.adapt_loss.loss_func.local_classifiers.parameters(), 'lr': 1.0 * initial_lr}
             )
+        elif self.transfer_loss == "cfd":
+            params.append(
+                {'params': self.adapt_loss.loss_func.sample_net.parameters(), 'lr': 1.0 * initial_lr}
+            )
         return params
 
     def predict(self, x):
@@ -89,5 +107,8 @@ class TransferNet(nn.Module):
     def epoch_based_processing(self, *args, **kwargs):
         if self.transfer_loss == "daan":
             self.adapt_loss.loss_func.update_dynamic_factor(*args, **kwargs)
+        elif self.transfer_loss == "cfd":
+            # Store current epoch for the CFD loss function
+            self.current_epoch = kwargs.get('epoch', 0)
         else:
             pass

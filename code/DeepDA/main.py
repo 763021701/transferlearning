@@ -49,6 +49,13 @@ def get_parser():
     # transfer related
     parser.add_argument('--transfer_loss_weight', type=float, default=10)
     parser.add_argument('--transfer_loss', type=str, default='mmd')
+    
+    # CFD loss specific arguments
+    parser.add_argument('--cfd_alpha', type=float, default=0.5, help='Weight for amplitude in CFD loss (0-1)')
+    parser.add_argument('--cfd_beta', type=float, default=0.5, help='Weight for phase in CFD loss (0-1)')
+    parser.add_argument('--cfd_gamma', type=float, default=1.0, help='Overall weight for CFD loss')
+    parser.add_argument('--t_batchsize', type=int, default=64, help='Batch size for CFD sampling network')
+    
     return parser
 
 def set_random_seed(seed=0):
