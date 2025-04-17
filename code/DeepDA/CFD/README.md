@@ -13,7 +13,6 @@ The method uses a learnable sampling network to select discriminative frequency 
 ## Parameters
 - `cfd_alpha`: Weight for amplitude discrepancy term (0-1)
 - `cfd_beta`: Weight for phase discrepancy term (0-1)
-- `cfd_gamma`: Overall weight multiplier for the CFD loss
 - `t_batchsize`: Batch size for the sampling network that generates frequency components
 
 ## Usage
@@ -22,12 +21,11 @@ To use CFD loss for domain adaptation, set the following parameters in your conf
 ```yaml
 transfer_loss: cfd
 cfd_alpha: 0.5
-cfd_beta: 0.5 
-cfd_gamma: 1.0
-t_batchsize: 64
+cfd_beta: 0.5
+t_batchsize: 2048
 ```
 
 ## Running an Experiment
 ```bash
 python main.py --config CFD/config.yaml
-``` 
+```

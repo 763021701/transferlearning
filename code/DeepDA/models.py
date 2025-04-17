@@ -5,8 +5,8 @@ import backbones
 
 
 class TransferNet(nn.Module):
-    def __init__(self, num_class, base_net='resnet50', transfer_loss='mmd', use_bottleneck=True, bottleneck_width=256, max_iter=1000, 
-                 cfd_alpha=0.5, cfd_beta=0.5, t_batchsize=64, **kwargs):
+    def __init__(self, num_class, base_net='resnet50', transfer_loss='mmd', use_bottleneck=True, bottleneck_width=256, max_iter=1000,
+                 **kwargs):
         super(TransferNet, self).__init__()
         self.num_class = num_class
         self.base_network = backbones.get_backbone(base_net)
@@ -21,23 +21,26 @@ class TransferNet(nn.Module):
             feature_dim = bottleneck_width
         else:
             feature_dim = self.base_network.output_num()
-        
+
         self.classifier_layer = nn.Linear(feature_dim, num_class)
         transfer_loss_args = {
             "loss_type": self.transfer_loss,
             "max_iter": max_iter,
             "num_class": num_class
         }
-        
+
         # Add CFD specific parameters if needed
         if transfer_loss == 'cfd':
+            cfd_alpha = kwargs.get('cfd_alpha', 0.5)
+            cfd_beta = kwargs.get('cfd_beta', 0.5)
+            t_batchsize = kwargs.get('t_batchsize', 2048)
             transfer_loss_args.update({
                 "alpha": cfd_alpha,
                 "beta": cfd_beta,
                 "t_batchsize": t_batchsize,
                 "feature_dim": feature_dim
             })
-            
+
         self.adapt_loss = TransferLoss(**transfer_loss_args)
         self.criterion = torch.nn.CrossEntropyLoss()
 

@@ -1,31 +1,30 @@
 # Dataset configuration
-data_dir: ../data/office31
-src_domain: amazon
-tgt_domain: webcam
-
 # Network configuration
-backbone: resnet50 
+backbone: resnet50
 use_bottleneck: true
-
-# Training configuration
-n_epoch: 100
-batch_size: 32
-epoch_based_training: true
-
-# Optimizer configuration
-lr: 0.001
-momentum: 0.9
-weight_decay: 0.0005
-lr_scheduler: true
-lr_gamma: 0.0003
-lr_decay: 0.75
 
 # Transfer loss configuration
 transfer_loss: cfd
 transfer_loss_weight: 10.0
 
+# Training configuration
+n_epoch: 20
+batch_size: 32
+
+# Optimizer configuration
+lr: 0.001
+weight_decay: 0.0005
+lr_scheduler: True
+lr_gamma: 0.0003
+lr_decay: 0.75
+momentum: 0.9
+
+
 # CFD loss specific configuration
 cfd_alpha: 0.5  # Weight for amplitude in CFD loss
 cfd_beta: 0.5   # Weight for phase in CFD loss
-cfd_gamma: 1.0  # Overall CFD loss multiplier
-t_batchsize: 64 # Sample network batch size 
+t_batchsize: 2048 # Sample network batch size
+
+# Others
+seed: 1
+num_workers: 6
