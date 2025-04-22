@@ -95,10 +95,6 @@ class TransferNet(nn.Module):
             params.append(
                 {'params': self.adapt_loss.loss_func.local_classifiers.parameters(), 'lr': 1.0 * initial_lr}
             )
-        elif self.transfer_loss == "cfd":
-            params.append(
-                {'params': self.adapt_loss.loss_func.sample_net.parameters(), 'lr': 1.0 * initial_lr}
-            )
         return params
 
     def predict(self, x):
