@@ -77,7 +77,7 @@ class CFLoss(nn.Module):
         self.beta = beta
         self.max_iter = max_iter
         self.sample_net = SampleNet(feature_dim=feature_dim, t_batchsize=t_batchsize)
-        self.sample_optim = torch.optim.AdamW(self.sample_net.parameters(), lr=0.001, weight_decay=5e-4)
+        self.sample_optim = torch.optim.AdamW(self.sample_net.parameters(), lr=0.01, weight_decay=5e-4)
         self.cur_iter = 0
 
     def update_alpha_beta(self, epoch):
@@ -126,14 +126,16 @@ class CFLoss(nn.Module):
     def train_sample_net(self, source, target):
         """Train the sample network with adversarial loss"""
         self.sample_net.train()
-        t = self.sample_net()
 
-        # We want to maximize the CF loss for better sampling
-        loss = -self._compute_loss(target, source, t)
+        for i in range(1):
+            t = self.sample_net()
+            # We want to maximize the CF loss for better sampling
+            loss = -self._compute_loss(target, source, t)
+            #print(i, loss.detach().cpu().item())
 
-        self.sample_optim.zero_grad()
-        loss.backward()
-        self.sample_optim.step()
+            self.sample_optim.zero_grad()
+            loss.backward()
+            self.sample_optim.step()
 
         self.sample_net.eval()
         t = self.sample_net()
@@ -149,7 +151,8 @@ class CFLoss(nn.Module):
             epoch: current training epoch or iteration
         """
         if epoch is not None:
-            self.update_alpha_beta(epoch)
+            # self.update_alpha_beta(epoch)
+            pass
 
         # Train sample net and get the sampling points
         t = self.train_sample_net(source.detach(), target.detach())
