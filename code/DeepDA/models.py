@@ -42,6 +42,9 @@ class TransferNet(nn.Module):
             })
 
         self.adapt_loss = TransferLoss(**transfer_loss_args)
+        if transfer_loss != 'bnm':
+            self.bnm_loss = TransferLoss(**{"loss_type": 'bnm'})
+            self.bnm_lambda = 1
         self.criterion = torch.nn.CrossEntropyLoss()
 
     def forward(self, source, target, source_label):
@@ -70,10 +73,17 @@ class TransferNet(nn.Module):
         elif self.transfer_loss == 'cfd':
             # For CFD loss, we might want to pass the current epoch for dynamic adjustments
             kwargs['epoch'] = getattr(self, 'current_epoch', 0)
-        
-        transfer_loss = self.adapt_loss(source, target, **kwargs)
+
+        if self.transfer_loss != 'bnm':
+            tar_clf = self.classifier_layer(target)
+            target_bnm = nn.Softmax(dim=1)(tar_clf)
+            bnm_loss = self.bnm_loss(source, target_bnm)
+        else:
+            bnm_loss = torch.tensor(0)
+
+        transfer_loss = self.adapt_loss(source, target, **kwargs) + self.bnm_lambda * bnm_loss
         return clf_loss, transfer_loss
-    
+
     def get_parameters(self, initial_lr=1.0):
         params = [
             {'params': self.base_network.parameters(), 'lr': 0.1 * initial_lr},

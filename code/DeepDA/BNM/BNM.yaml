@@ -15,8 +15,8 @@ momentum: 0.9
 
 # Training related
 n_iter_per_epoch: 300
-n_epoch: 20
+n_epoch: 30
 
 # Others
 seed: 1
-num_workers: 3
+num_workers: 6

@@ -7,10 +7,10 @@ transfer_loss_weight: 1.0
 
 # Training configuration
 n_iter_per_epoch: 500
-n_epoch: 20
+n_epoch: 30
 
 # Optimizer configuration
-lr: 3e-3
+lr: 1e-3
 weight_decay: 5e-4
 lr_scheduler: True
 lr_gamma: 0.0003
@@ -19,9 +19,9 @@ momentum: 0.9
 
 
 # CFD loss specific configuration
-cfd_alpha: 0.5  # Weight for amplitude in CFD loss
-cfd_beta: 0.5   # Weight for phase in CFD loss
-t_batchsize: 2048 # Sample network batch size
+cfd_alpha: 0.9  # Weight for amplitude in CFD loss
+cfd_beta: 0.1   # Weight for phase in CFD loss
+t_batchsize: 512 # Sample network batch size
 
 # Others
 seed: 1
