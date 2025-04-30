@@ -9,3 +9,4 @@ outputs/
 __pycache__/
 *.pth
 train_log.csv
+.ipynb_checkpoints/
